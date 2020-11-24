@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require("uuid");
+
 // init express
 const express = require("express");
 const app = new express();
@@ -8,6 +10,7 @@ var http = require("http").createServer(app);
 var io = require("socket.io")(http);
 
 let connected = 0;
+let names = [];
 
 // routing
 app.get("/", (req, res) => {
@@ -26,12 +29,30 @@ app.get("/js/main.js", (req, res) => {
 io.on("connection", (socket) => {
   connected++;
   console.log("a user connected. Users connected: " + connected);
-
   io.emit("connected-update", connected);
+  io.emit("names-update", names);
+
+  let name = false;
+  socket.on("set-name", (val) => {
+    const id = uuidv4();
+
+    name = { name: val, id: id };
+    names.push(name);
+
+    io.emit("names-update", names);
+    io.emit("name-registered", name);
+  });
 
   socket.on("disconnect", () => {
     connected--;
     console.log("user disconnected. Users connected: " + connected);
+
+    if (name) {
+      names = names.filter((x) => {
+        return x.id != name.id;
+      });
+      io.emit("names-update", names);
+    }
 
     io.emit("connected-update", connected);
   });
