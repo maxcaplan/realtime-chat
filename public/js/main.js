@@ -5,3 +5,9 @@ document.documentElement.style.setProperty("--vh", `${vh}px`);
 document.getElementById("online-toggle").addEventListener("click", () => {
   document.getElementById("custom-sidebar").classList.toggle("opened");
 });
+
+var socket = io();
+
+socket.on("connected-update", (val) => {
+  document.getElementById("online-count").innerText = val;
+});
