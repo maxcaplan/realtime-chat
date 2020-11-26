@@ -48,8 +48,28 @@
 
         <div id="chat-wrapper">
           <div class="row h-100 w-100 m-0">
-            <div class="col h-100 p-2 p-md-3">
-              <div id="messages"></div>
+            <div class="col h-100 px-2 px-md-3" style="position: relative">
+              <div id="messages">
+                <div id="messages-content">
+                  <div
+                    v-for="(message, index) in messages"
+                    :key="index"
+                    class="row g-3 w-100 m-0"
+                  >
+                    <div class="col-auto">
+                      <div class="icon text-light" :class="isUser(message.id)">
+                        {{ message.name.charAt(0).toUpperCase() }}
+                      </div>
+                    </div>
+                    <div class="col">
+                      <b>{{ message.name }}</b>
+                      <p :class="{ 'text-muted': !message.sent }">
+                        {{ message.message }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div id="message-bar" class="card card-body p-2 shadow-sm">
                 <div class="row g-2 g-md-3">
@@ -61,22 +81,29 @@
                     </button>
                   </div>
                   <div class="col">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Send a message"
-                    />
+                    <form id="message-form" @submit.prevent="sendMessage">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Send a message"
+                        v-model="chatInput"
+                      />
+                    </form>
                   </div>
                   <div class="col-auto">
                     <button
                       id="send-btn"
                       class="btn btn-primary d-none d-md-inline"
+                      type="submit"
+                      form="message-form"
                     >
                       Send
                     </button>
                     <button
                       id="send-btn-sm"
                       class="btn btn-primary d-inline d-md-none"
+                      type="submit"
+                      form="message-form"
                     >
                       <i class="fas fa-paper-plane"></i>
                     </button>
@@ -101,7 +128,7 @@
                     :class="{ 'mb-2': index < names.length - 1 }"
                   >
                     <div class="col-auto">
-                      <div class="icon">
+                      <div class="icon text-light" :class="isUser(person.id)">
                         {{ person.name.charAt(0).toUpperCase() }}
                       </div>
                     </div>
@@ -190,6 +217,17 @@
     ></script>
 
     <script src="/socket.io/socket.io.js"></script>
+
+    <!-- <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/css-element-queries/1.2.3/ElementQueries.min.js"
+      integrity="sha512-ggR6eS+dyTcPruG+XYlKG8V90GTV6cSIbPafzqflZei2g2opJ/rOzgQog3kE2k0o9fyR9iUAUjGiwXSchBKnkw=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/css-element-queries/1.2.3/ResizeSensor.min.js"
+      integrity="sha512-Li66vFTPdL3BpG7YUS8/TdT+mpL4QWYe9N3f39LLZzxnPJL/w1Ih3C/CgEJmsQjSEy8Xx8+vTFDAS3A2s5NBUg=="
+      crossorigin="anonymous"
+    ></script> -->
 
     <script src="./js/main.js"></script>
   </body>

@@ -54,7 +54,11 @@ body,
 }
 
 #messages {
-  height: calc(100% - var(--bar-height));
+  position: relative;
+  height: calc(100% - var(--bar-height) - 3rem);
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  overflow-y: auto;
 }
 
 #message-bar {
@@ -65,8 +69,6 @@ body,
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--bs-gray);
-  color: var(--bs-light);
   font-weight: bold;
   width: 32px;
   height: 32px;
